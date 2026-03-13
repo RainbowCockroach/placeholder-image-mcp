@@ -1,0 +1,1 @@
+# placeholder-pic-mcp
