@@ -1,21 +1,30 @@
 {
   "name": "placeholder-image-mcp",
   "version": "1.0.0",
-  "description": "",
+  "description": "MCP server for generating placeholder PNG images",
   "main": "dist/index.js",
   "bin": {
     "placeholder-image-mcp": "dist/index.js"
   },
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "tsc",
+    "prepare": "npm run build",
     "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RainbowCockroach/placeholder-image-mcp.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "mcp",
+    "placeholder",
+    "image",
+    "png"
+  ],
+  "author": "RGB Cockroach",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
