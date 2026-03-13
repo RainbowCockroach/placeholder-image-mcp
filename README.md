@@ -1,80 +1,73 @@
-# Placeholder Image MCP Server
+# placeholder-image-mcp
 
-Generate PNG placeholder images with random colors, optional centered text, and smart contrast for readable text.
+Generates PNG placeholder images with colored background and text. Support batch generate.
 
-## Features
+## Installation
 
-- 🎨 **30-color curated palette** — muted pastels easy on the eyes
-- 📝 **Text support** — centered text, `_s` for dimensions, or blank
-- 🌈 **Smart contrast** — automatically picks black or white text based on background luminance (WCAG 2.0)
-- 🔄 **Batch generation** — generate multiple images in one call with different random colors
-- 📍 **Relative paths** — save to your project directory without absolute paths
+```bash
+git clone https://github.com/RainbowCockroach/placeholder-image-mcp.git
+cd placeholder-image-mcp
+npm install
+npm run build
+```
+
+Then register it as an MCP server in your agent's config (check the documentation in of your AI agent). Or just ask it to install this MCP for you. It's good at doing that.
 
 ## Usage
 
-Call the `generate_placeholder` tool with one of two modes:
+Once connected, just ask your agent to generate placeholder images. It will call the tool automatically.
 
-### Mode 1: Array of images
+**Examples:**
+
+- "Create 64x64 image and save it to desktop"
+- "Create three placeholder banners at 100x100 with text "frog", save to {some folder}"
+- "Create 200x200 pink image, show its dimension"
+
+Two calling modes:
+
+### Individual images
+
+Each image has its own size, text, color, and output path:
 
 ```json
 {
   "images": [
-    {
-      "width": 800,
-      "height": 600,
-      "text": "_s",
-      "path": "placeholder1.png"
-    },
+    { "width": 800, "height": 600, "text": "ss", "path": "hero.png" },
     {
       "width": 400,
       "height": 300,
-      "text": "Hello",
-      "color": "#A8D8EA",
-      "path": "images/placeholder2.png"
+      "text": "Frog",
+      "color": "#1a874f",
+      "path": "frog.png"
     }
   ]
 }
 ```
 
-### Mode 2: Batch (one config, multiple paths)
+### Batch (same config, multiple files)
+
+One config applied to multiple paths — each file gets a different random color:
 
 ```json
 {
-  "config": {
-    "width": 600,
-    "height": 400,
-    "text": "My App"
-  },
-  "paths": [
-    "banner-light.png",
-    "banner-dark.png",
-    "banner-accent.png"
-  ]
+  "config": { "width": 600, "height": 400, "text": "Yayaya" },
+  "paths": ["is-cucumber.png", "fruit.png", "or-veggie.png"]
 }
 ```
 
-Each path in batch mode gets a different random color.
-
 ## Parameters
 
-| Parameter | Type | Default | Notes |
-|-----------|------|---------|-------|
-| `width` | number | required | 1–8192 pixels |
-| `height` | number | required | 1–8192 pixels |
-| `text` | string | `""` | Text to center. Use `"_s"` for dimensions (e.g., "800×600") |
-| `color` | string | random | Hex color (e.g., `#A8D8EA`). Omit for random from palette |
-| `path` | string | required | File path. Relative paths resolve to Claude Code's open directory |
+| Parameter | Type   | Required | Description                                                                                                           |
+| --------- | ------ | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `width`   | number | yes      | Width in pixels (1–8192)                                                                                              |
+| `height`  | number | yes      | Height in pixels (1–8192)                                                                                             |
+| `text`    | string | no       | Centered text. Use `"ss"` to show dimensions (e.g. `800×600`). Blank by default.                                      |
+| `color`   | string | no       | Hex background color (e.g. `#A8D8EA`). Omit for random.                                                               |
+| `path`    | string | yes      | Output path. Relative paths resolve against the `CLAUDE_CWD` env var if set, otherwise the process working directory. |
 
-## Path Resolution
+## Color palette
 
-- **Relative paths** (e.g., `placeholder.png`, `images/hero.png`) → resolved to Claude Code's current working directory
-- **Absolute paths** (e.g., `/tmp/image.png`) → used as-is
-
-When Claude Code opens a directory, the MCP saves relative paths there automatically—no need for absolute paths.
-
-## Color Palette
-
-Soft, muted colors that look good as backgrounds:
+30 soft pastel colors chosen to look good as backgrounds:
 
 ```
 #A8D8EA  #AA96DA  #FCBAD3  #FFFFD2  #B5EAD7  #E2F0CB  #C7CEEA
@@ -84,20 +77,4 @@ Soft, muted colors that look good as backgrounds:
 #D291BC  #FEC8D8
 ```
 
-## Building
-
-```bash
-npm install
-npm run build
-npm start
-```
-
-## Implementation
-
-- **SVG + Sharp** — no native dependencies, lightweight and fast
-- **WCAG 2.0 contrast** — text color automatically chosen for accessibility
-- **TypeScript** — fully typed with Zod validation
-
-## Environment Variables
-
-- `CLAUDE_CWD` — override the base directory for relative paths (optional; Claude Code usually handles this)
+Text is automatically black or white based on WCAG 2.0 contrast ratio.

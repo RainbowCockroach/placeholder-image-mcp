@@ -12,14 +12,14 @@ const ImageConfigSchema = z.object({
     .string()
     .optional()
     .describe(
-      'Text to display centered on image. Use "_s" to show dimensions (e.g. "800×600"). Omit or "" for blank.'
+      'Text to display centered on image. Use "ss" to show dimensions (e.g. "800×600"). Omit or "" for blank.',
     ),
   color: z
     .string()
     .regex(/^#[0-9a-fA-F]{6}$/)
     .optional()
     .describe(
-      "Background color as hex (e.g. #A8D8EA). Omit for random from curated palette."
+      "Background color as hex (e.g. #A8D8EA). Omit for random from curated palette.",
     ),
   path: z.string().describe("Output file path for the PNG"),
 });
@@ -37,7 +37,7 @@ server.tool(
       .array(ImageConfigSchema)
       .optional()
       .describe(
-        "Array of image configurations. Each gets its own size, text, color, and output path."
+        "Array of image configurations. Each gets its own size, text, color, and output path.",
       ),
     config: z
       .object({
@@ -57,25 +57,25 @@ server.tool(
           .string()
           .optional()
           .describe(
-            'Text to display centered on image. Use "_s" to show dimensions. Omit or "" for blank.'
+            'Text to display centered on image. Use "ss" to show dimensions. Omit or "" for blank.',
           ),
         color: z
           .string()
           .regex(/^#[0-9a-fA-F]{6}$/)
           .optional()
           .describe(
-            "Background color as hex. Omit for random (each image gets a different color)."
+            "Background color as hex. Omit for random (each image gets a different color).",
           ),
       })
       .optional()
       .describe(
-        "Single config template for batch mode. Use with `paths` to generate multiple images."
+        "Single config template for batch mode. Use with `paths` to generate multiple images.",
       ),
     paths: z
       .array(z.string())
       .optional()
       .describe(
-        "Output file paths for batch mode. Each path produces one image with a different random color."
+        "Output file paths for batch mode. Each path produces one image with a different random color.",
       ),
   },
   async (params) => {
@@ -91,7 +91,7 @@ server.tool(
               type: "text" as const,
               text: `Generated ${results.length} image(s):\n${results
                 .map(
-                  (r) => `  - ${r.path} (${r.width}x${r.height}, ${r.color})`
+                  (r) => `  - ${r.path} (${r.width}x${r.height}, ${r.color})`,
                 )
                 .join("\n")}`,
             },
@@ -110,7 +110,7 @@ server.tool(
               type: "text" as const,
               text: `Generated ${results.length} image(s):\n${results
                 .map(
-                  (r) => `  - ${r.path} (${r.width}x${r.height}, ${r.color})`
+                  (r) => `  - ${r.path} (${r.width}x${r.height}, ${r.color})`,
                 )
                 .join("\n")}`,
             },
@@ -122,7 +122,7 @@ server.tool(
         content: [
           {
             type: "text" as const,
-            text: 'Error: Provide either `images` (array of configs) or `config` + `paths` (batch mode).',
+            text: "Error: Provide either `images` (array of configs) or `config` + `paths` (batch mode).",
           },
         ],
         isError: true,
@@ -138,7 +138,7 @@ server.tool(
         isError: true,
       };
     }
-  }
+  },
 );
 
 async function main() {

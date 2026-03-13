@@ -6,7 +6,7 @@ import { contrastTextColor, randomColor } from "./colors.js";
 export interface ImageConfig {
   width: number;
   height: number;
-  text?: string; // "" = blank, "_s" = show size, else literal text
+  text?: string; // "" = blank, "ss" = show size, else literal text
   color?: string; // hex color, or omit for random
   path: string; // output file path (relative or absolute)
 }
@@ -45,7 +45,7 @@ function buildSvg(
   width: number,
   height: number,
   bgColor: string,
-  text: string
+  text: string,
 ): string {
   const textColor = contrastTextColor(bgColor);
 
@@ -88,13 +88,13 @@ function buildSvg(
  */
 export async function generateImage(
   config: ImageConfig,
-  assignedColor?: string
+  assignedColor?: string,
 ): Promise<{ path: string; color: string; width: number; height: number }> {
   const bgColor = config.color || assignedColor || randomColor();
 
   // Resolve text
   let displayText = "";
-  if (config.text === "_s") {
+  if (config.text === "ss") {
     displayText = `${config.width}\u00D7${config.height}`;
   } else if (config.text !== undefined && config.text !== "") {
     displayText = config.text;
@@ -126,7 +126,7 @@ export async function generateImage(
 export async function generateImages(
   params:
     | { images: ImageConfig[] }
-    | { config: Omit<ImageConfig, "path">; paths: string[] }
+    | { config: Omit<ImageConfig, "path">; paths: string[] },
 ): Promise<{ path: string; color: string; width: number; height: number }[]> {
   const usedColors = new Set<string>();
 
@@ -136,7 +136,7 @@ export async function generateImages(
         const color = img.color || randomColor(usedColors);
         usedColors.add(color);
         return generateImage(img, color);
-      })
+      }),
     );
     return results;
   }
@@ -148,7 +148,7 @@ export async function generateImages(
       const color = config.color || randomColor(usedColors);
       usedColors.add(color);
       return generateImage({ ...config, path: p }, color);
-    })
+    }),
   );
   return results;
 }
